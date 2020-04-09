@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+     
+<style>
+    #container {
+        margin: 0px auto;
+        width: 500px;
+        height: 375px;
+        border: 10px #333 solid;
+    }
+    #videoElement {
+        width: 500px;
+        height: 375px;
+        background-color: #666;
+    }
+    </style>
+    </head>
+     
+    <body>
+    <div id="container">
+        <video autoplay="true" id="videoElement">
+        
+        </video>
+        <button id="btn"> Click to capture photo </button>
+        <canvas id="canvas"> 
+
+        </canvas>
+        <img src="" id="img" alt="">
+
+        <a id="dl-btn" href="#" download="image.png">Save Photo</a>
+    </div>
+</body>
+<script>
+    const btn = document.getElementById("btn");
+    const canvas = document.getElementById("canvas");
+
+    let img = document.getElementById("img");
+
+    let video = document.querySelector("#videoElement");
+
+    if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then( (stream) => {
+        video.srcObject = stream;
+        })
+        .catch( (err0r)  => {
+        console.log("Something went wrong!");
+        });
+    }
+
+    btn.addEventListener("click", () => {
+        console.log("pressed");
+
+        let width = video.videoWidth, height = video.videoHeight;
+
+        let context = canvas.getContext("2d");
+        console.log(width,height);
+
+        canvas.width = width;
+        canvas.height = height;
+
+        context.drawImage(video, 0 , 0, width, height);
+
+        let imgURL = canvas.toDataURL('image/png');
+
+        img.setAttribute("src", imgURL);
+
+        document.querySelector('#dl-btn').href = imgURL;
+    });
+</script>
+</html>
